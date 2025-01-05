@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add styling for the button row */
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .button-row a {
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .button-row a:hover {
+            background-color: #0056b3;
+        }
+
+        /* Add styling for Add/Withdraw Cash button */
+        .cash-button {
+            display: block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .cash-button:hover {
+            background-color: #218838;
+        }
+
+        /* Add any additional styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Bromskiii $TOCKS</h1>
+        <!-- Button Row for navigation -->
+        <div class="button-row">
+            <a href="/quote">Quote</a>
+            <a href="/buy">Buy</a>
+            <a href="/sell">Sell</a>
+            <a href="/history">History</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
+
+    <main>
+        <h2>Welcome, {{ username }}</h2>
+
+        <!-- Portfolio Table -->
+        <section>
+            <h3>Portfolio</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Name</th>
+                        <th>Shares</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in portfolio %}
+                    <tr>
+                        <td>{{ stock.symbol }}</td>
+                        <td>{{ stock.name }}</td>
+                        <td>{{ stock.shares }}</td>
+                        <td>{{ stock.price | usd }}</td>
+                        <td>{{ stock.total | usd }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Account Summary Section -->
+        <section>
+            <h3>Account Summary</h3>
+            <p>Cash Balance: {{ cash | usd }}</p>
+            <p>Total Account Value: {{ total | usd }}</p>
+        </section>
+
+        <!-- Add/Withdraw Cash Button -->
+        <a href="/cash" class="cash-button">Add/Withdraw Cash</a>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Portfolio Manager</p>
+    </footer>
+</body>
+</html>
+

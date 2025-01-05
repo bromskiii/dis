@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Stocks</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .selected {
+            background-color: #d1ffd1 !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Buy Stocks</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Stock Symbol</th>
+                <th>Stock Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+                <tr>
+                    <td class="symbol">{{ stock.symbol }}</td>
+                    <td>{{ stock.name }}</td>
+                    <td>{{ stock.price | usd }}</td>
+                    <td>
+                        <input type="number" class="quantity" min="1" placeholder="Qty" required>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="text-align: center;">
+        <button id="buy-button">Buy</button>
+    </div>
+
+    <a href="/">Back to Portfolio</a>
+
+    <script>
+        // Add event listeners to table rows
+        const rows = document.querySelectorAll("table tbody tr");
+        let selectedRow = null;
+
+        rows.forEach(row => {
+            row.addEventListener("click", () => {
+                if (selectedRow) {
+                    selectedRow.classList.remove("selected");
+                }
+                selectedRow = row;
+                row.classList.add("selected");
+            });
+        });
+
+        // Handle Buy button click
+        document.getElementById("buy-button").addEventListener("click", (event) => {
+            // Prevent default form submission behavior
+            event.preventDefault();
+
+            if (!selectedRow) {
+                alert("Please select a stock to buy.");
+                return;
+            }
+
+            const quantityInput = selectedRow.querySelector(".quantity");
+            const symbolCell = selectedRow.querySelector(".symbol");
+            const quantity = quantityInput.value.trim();
+
+            if (!quantity || quantity <= 0) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            // Perform the buy action (submit form via JavaScript)
+            fetch("/buy", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    symbol: symbolCell.textContent.trim(),
+                    shares: quantity,
+                }),
+            })
+            .then(response => {
+                if (response.redirected) {
+                    // Handle server redirect
+                    window.location.href = response.url;
+                } else {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                if (data && !data.success) {
+                    alert("Purchase failed: " + data.error);
+                }
+            })
+            .catch(error => {
+                alert("An error occurred: " + error.message);
+            });
+        });
+    </script>
+</body>
+</html>

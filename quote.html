@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Stock</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Get Stock Quote</h1>
+    <form action="/quote" method="POST">
+        <label for="symbol">Enter Stock Symbol:</label>
+        <input type="text" id="symbol" name="symbol" placeholder="e.g., AAPL" required>
+        <button type="submit">Get Quote</button>
+    </form>
+    <br>
+    <a href="/">Back to Home</a>
+</body>
+</html>

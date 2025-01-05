@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Stock</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Sell Stock</h1>
+
+    <form action="/sell" method="POST">
+        <div>
+            <label for="symbol">Stock Symbol:</label>
+            <select name="symbol" id="symbol" required>
+                {% for stock in symbols %}
+                    <option value="{{ stock }}">{{ stock }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="shares">Shares to Sell:</label>
+            <input type="number" name="shares" id="shares" min="1" required>
+        </div>
+
+        <button type="submit">Sell</button>
+    </form>
+
+    <br>
+    <a href="/">Back to Portfolio</a>
+
+</body>
+</html>
